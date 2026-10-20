@@ -1,0 +1,14 @@
+% The 2027 template requires a sans serif font.
+% LuaLaTeX: Fira Sans, Fira Mono, and Fira Math through fontsetup.
+% pdfLaTeX: Fira Sans and Fira Mono (Type 1), mathematics in Computer Modern.
+\usepackage{iftex}
+\ifpdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage[sfdefault,lining]{FiraSans}
+  \usepackage[lining]{FiraMono}
+  % The style switches to the roman family on its title pages, so that family is Fira too.
+  \edef\rmdefault{\sfdefault}
+\else
+  \usepackage[fira]{fontsetup}
+\fi

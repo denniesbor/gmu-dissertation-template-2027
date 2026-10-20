@@ -1,0 +1,113 @@
+% Settings that change the output of gmuETD.sty without editing it.
+% Each block says what it does and how to turn it off.
+
+% --- Layout required by the 2027 template ---------------------------------
+% No first line indent and 36 pt between floats and text.
+\setlength{\parindent}{0pt}
+\renewcommand{\textfloatsep}{36pt}
+\renewcommand{\floatsep}{36pt}
+\renewcommand{\intextsep}{36pt}
+
+% --- Reference list at the end of each chapter -----------------------------
+% apacite's list tests \if@mainmatter, which the report class lacks. True gives
+% a section heading inside a chapter, false a chapter heading at the end.
+\makeatletter
+\newif\if@mainmatter
+\ifdefstring{\referencelists}{chapter}{\@mainmattertrue}{\@mainmatterfalse}
+\makeatother
+% Keep apacite's APA layout (the style's own list numbers its entries),
+% single spaced as the style sets its reference list.
+\def\thebibliography#1{\ls{1}\APACthebibliography{#1}}
+\let\endthebibliography\APACendthebibliography
+% End every chapter with \chapterreferences and put \thesisreferences after the
+% appendices. \referencelists in main.tex decides which one prints.
+\ifdefstring{\referencelists}{chapter}{
+  \newcommand{\chapterreferences}{%
+    \clearpage
+    \phantomsection\addcontentsline{toc}{section}{References}%
+    \bibliographystyle{apacite}%
+    \bibliography{references}%
+  }
+  \newcommand{\thesisreferences}{}
+}{
+  \newcommand{\chapterreferences}{}
+  \newcommand{\thesisreferences}{%
+    \clearpage
+    \phantomsection\addcontentsline{toc}{chapter}{References}%
+    \bibliographystyle{apacite}%
+    \bibliography{references}%
+  }
+}
+
+% --- Signature page --------------------------------------------------------
+% UDTS requires the title in capitals and underlined. \underline would tag each
+% line as mathematics, so a rule is drawn under a text box, one line at a time.
+% Break the title into lines with \\ in \title (frontmatter/metadata.tex).
+\makeatletter
+\ExplSyntaxOn
+\seq_new:N \l__thesis_title_lines_seq
+\box_new:N \l__thesis_title_line_box
+\cs_new_protected:Npn \__thesis_underlined_line:n #1
+  {
+    \hbox_set:Nn \l__thesis_title_line_box { \MakeUppercase {#1} }
+    \mode_leave_vertical:
+    \hbox_overlap_right:n { \rule [ -2.0pt ] { \box_wd:N \l__thesis_title_line_box } { 0.4pt } }
+    \box_use_drop:N \l__thesis_title_line_box
+  }
+\NewDocumentCommand \thesissignaturetitle { }
+  {
+    \seq_set_split:NnV \l__thesis_title_lines_seq { \\ } \@title
+    \seq_map_indexed_inline:Nn \l__thesis_title_lines_seq
+      {
+        \int_compare:nNnF {##1} = { 1 } { \\ }
+        \__thesis_underlined_line:n {##2}
+      }
+  }
+\ExplSyntaxOff
+\patchcmd{\signaturepage}{\uppercase\expandafter{\@title}}{\thesissignaturetitle}{}{
+  \PackageError{template}{Unable to underline the signature page title}{Check the signature page in gmuETD.sty.}
+}
+% "Fulfillment" with a capital, as on the UDTS signature sheets.
+\patchcmd{\signaturepage}{In Partial fulfillment of}{In Partial Fulfillment of}{}{
+  \PackageError{template}{Unable to capitalize Fulfillment}{Check the signature page in gmuETD.sty.}
+}
+
+% --- Title page: the director's rank ---------------------------------------
+% The style prints ", Professor" after the director's name. Set the rank in
+% frontmatter/metadata.tex with \advisorrank{Associate Professor}. An empty
+% argument prints the name alone.
+\def\@advisorrankline{, Professor}
+\newcommand{\advisorrank}[1]{\ifx\relax#1\relax\gdef\@advisorrankline{}\else\gdef\@advisorrankline{, #1}\fi}
+\patchcmd{\titlepage}{\@advisorname, Professor}{\@advisorname\@advisorrankline}{}{
+  \PackageError{template}{Unable to set the director's rank}{Check the title page in gmuETD.sty.}
+}
+
+% --- Page numbers and spacing required by UDTS review (2026) ----------------
+% The copyright page must be ii. The style sets the dedication page counter
+% before the dedication heading starts a new page, so the break goes first.
+\pretocmd{\dedicationpage}{\clearpage}{}{
+  \PackageError{template}{Unable to end the copyright page}{Check the dedication page in gmuETD.sty.}
+}
+% Biography text at 1.5 line spacing.
+\patchcmd{\biography}{\ls{1}}{\ls{1.5}}{}{
+  \PackageError{template}{Unable to set the biography spacing}{Check the biography in gmuETD.sty.}
+}
+\makeatother
+
+% --- pdfLaTeX only: two PDF/UA repairs -------------------------------------
+% pdfTeX writes the space after a symbol in the symbol's font, and the space
+% glyph of the Type 1 Fira symbol font has inconsistent metrics (a PDF/UA
+% failure on the copyright page). A zero width compound word mark from the text
+% font after the symbol avoids it.
+% pdfTeX also draws table rules outside any marked content, so \hline is
+% wrapped as an artifact. Use \hline in tables, not the booktabs rules.
+\ifpdftex
+  \renewcommand{\copyright}{\textcopyright\textcompwordmark}
+  \makeatletter
+  \let\template@hline\hline
+  \renewcommand{\hline}{\noalign{\tagmcbegin{artifact}}\template@hline\noalign{\tagmcend}}
+  \makeatother
+\fi
+
+% Long identifiers such as DOIs need extra stretch on difficult lines.
+\emergencystretch=1em

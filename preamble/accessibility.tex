@@ -1,0 +1,20 @@
+% UDTS requires the accessible template for the Spring 2027 degree term.
+% MathML for the mathematics is produced by LuaLaTeX. pdfLaTeX tags the
+% document and attaches the LaTeX source of each formula instead.
+\ifdefined\directlua
+  \DocumentMetadata{
+    lang=en,
+    pdfstandard=ua-2,
+    tagging=on,
+    tagging-setup={math/setup=mathml-SE}
+  }
+\else
+  \DocumentMetadata{
+    lang=en,
+    pdfstandard=ua-2,
+    tagging=on
+  }
+\fi
+% These are the paragraph socket settings supplied by the UDTS template.
+\AssignTaggingSocketPlug{para/semantic/begin}{noop}
+\AssignTaggingSocketPlug{para/semantic/end}{noop}

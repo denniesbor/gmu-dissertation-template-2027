@@ -1,0 +1,16 @@
+\chapter{A Second Chapter}
+\label{ch:second}
+
+Each chapter ends with \verb|\chapterreferences|. In manuscript style it starts a new page, adds a References entry to the table of contents, and prints the works cited in that chapter. This chapter cites one work \cite{bor_revisiting_2026}, so its list has one entry. In traditional style the command prints nothing and one list follows the appendices.
+
+\section{Headings}
+\label{sec:second:headings}
+
+Chapters are numbered as ``1.'' and sections as ``1.1'' in the template style. The headings are recorded as PDF headings for assistive technology. Use \verb|\chapter|, \verb|\section|, and \verb|\subsection| as in any LaTeX document.
+
+\subsection{Cross references}
+\label{sec:second:refs}
+
+Refer to chapters, sections, figures, tables, and equations with \verb|\ref| and the kind spelled out: Chapter~\ref{ch:example}, Figure~\ref{fig:example:mason}, Table~\ref{tab:example:values}, Equation~\ref{eq:example:ohm}, and Appendix~\ref{app:data}.
+
+\chapterreferences

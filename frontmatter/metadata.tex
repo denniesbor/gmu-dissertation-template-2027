@@ -1,0 +1,53 @@
+% Title, author, degree, and the signature page.
+% The signature page underlines each title line, so break the title with \\.
+% \onelinetitle is the same title without breaks, used on the title and abstract pages.
+\title{Title of the Dissertation on the First Line \\
+and the Rest of the Title on the Second Line}
+\onelinetitle{Title of the Dissertation on the First Line and the Rest of the Title on the Second Line}
+
+\author{Firstname M. Lastname}
+\degree{Doctor of Philosophy}
+\doctype{Dissertation}            % or Thesis
+\deptadvisor{Geography and Geoinformation Science}   % department of the director
+\discipline{Earth Systems and Geoinformation Sciences}  % name of the degree program
+
+% Earlier degrees, most recent first. \seconddeg and \thirddeg are optional.
+\firstdeg{Bachelor of Science}
+\firstdegschool{Name of University}
+\firstdegyear{2019}
+% \seconddeg{Master of Science}
+% \seconddegschool{Name of University}
+% \seconddegyear{2021}
+
+\degreeyear{2027}
+\degreesemester{Spring Semester}   % Fall Semester, Spring Semester, or Summer Semester
+
+% The director. The title page prints the rank after the name:
+% \advisorrank{Professor} (the default), \advisorrank{Associate Professor}, or
+% \advisorrank{} for the name alone.
+\advisorname{Dr. Firstname Lastname}
+\advisorrank{Professor}
+\makeatletter
+\advisorsignline{\@advisorname, \@doctype\ Director}
+\makeatother
+% For two directors, add \coadvisorname, \deptcoadvisor, and \coadvisorsignline.
+
+% Committee members. \thirdmember to \sixthmember are optional.
+\firstmember{Dr. Firstname Lastname, Committee Member}
+\secondmember{Dr. Firstname Lastname, Committee Member}
+\thirdmember{Dr. Firstname Lastname, Committee Member}
+
+% Approval lines after the committee. They differ by college and program.
+% Take the names and titles from your college's signature sheet at
+% https://library.gmu.edu/udts/SignatureSheets. The example below is the
+% College of Science PhD sheet of 2026. The style has two slots after the
+% committee (\nexttolast, \lastsignature), so a third line uses \fourthmember.
+% \addsigline starts a new line under the same signature.
+\fourthmember{Dr. First Last, Department Chairperson}
+\nexttolast{Dr. First Last,\addsigline Associate Dean for Undergraduate and\addsigline Graduate Affairs, College of Science}
+\lastsignature{Dr. First Last, Dean, College of Science}
+
+% With seven signatures the page overflows at the default spacing. The template
+% allows these two spaces to change. Restore 0.20in and 0.5in for fewer lines.
+\renewcommand{\intercommspace}{0.12in}
+\renewcommand{\midTitleSkip}{0.3in}

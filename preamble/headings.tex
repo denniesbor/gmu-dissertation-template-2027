@@ -1,0 +1,73 @@
+% The heading instances below use the headformat template of latex-lab
+% 2026-06-01, so the LaTeX kernel and latex-lab must be from June 2026 or
+% later. A TeX Live 2026 or MacTeX 2026 installed from the release media
+% stops at LaTeX 2025-11-01 and fails here with "The template 'hang' of
+% type 'headformat' is unknown". Update it with "tlmgr update --self --all"
+% (with sudo for MacTeX). On Overleaf set the TeX Live version to 2026.
+\newcommand{\templateversionerror}{%
+  \PackageError{template}{%
+    LaTeX 2026-06-01 or newer with its latex-lab is required\MessageBreak
+    (this run uses LaTeX \fmtversion)}{%
+    Update TeX Live 2026 with "tlmgr update --self --all",\MessageBreak
+    with sudo for MacTeX. On Overleaf set the TeX Live version to 2026.}%
+}
+\IfFormatAtLeastTF{2026-06-01}{%
+  \IfFileExists{latex-lab-testphase-sec-template.sty}{}{\templateversionerror}%
+}{\templateversionerror}
+
+\DeclareInstance{headformat}{thesis-chapter}{hang}{
+  prefix-number-sep = \WordSpaceAmount{1},
+  number-title-sep = \WordSpaceAmount{1}
+}
+\DeclareInstance{heading}{chapter}{display}{
+  name = chapter,
+  level = 0,
+  placement = top,
+  after-penalty-vspace = \dimexpr0.27in+\topsep+\partopsep\relax,
+  after-vspace = 22pt,
+  heading-decls = \normalfont\Large\bfseries\centering,
+  number-format = \theheading.,
+  headformat-instance = thesis-chapter
+}
+\DeclareInstance{headformat}{thesis-front}{hang}{
+  number-title-sep = 0pt
+}
+\DeclareInstance{heading}{thesis-front}{display}{
+  name = chapter,
+  level = 0,
+  placement = top,
+  start-code = \clearpage,
+  after-penalty-vspace = \dimexpr0.625in-0.5\topskip\relax,
+  after-vspace = 50pt,
+  heading-decls = \normalfont\Large\bfseries\centering,
+  headformat-instance = thesis-front
+}
+\DeclareInstanceCopy{heading}{thesis-appendix}{chapter}
+\EditInstance{heading}{thesis-appendix}{
+  prefix = Appendix,
+  after-penalty-vspace = \dimexpr-0.48in+\topsep+\partopsep\relax
+}
+
+\RenewDocumentCommand\chapt{s o m}{
+  \IfBooleanTF{#1}{
+    \ParseLaTeXeHeading{thesis-front}{\BooleanTrue}{\NoValue}{#3}
+  }{
+    \ParseLaTeXeHeading{thesis-front}{\BooleanTrue}{shorttitle={\IfNoValueTF{#2}{#3}{#2}}}{#3}
+  }
+}
+\RenewDocumentCommand\appchapter{o m}{
+  \IfNoValueTF{#1}{
+    \ParseLaTeXeHeading{thesis-appendix}{\BooleanFalse}{\NoValue}{#2}
+  }{
+    \ParseLaTeXeHeading{thesis-appendix}{\BooleanFalse}{shorttitle={#1}}{#2}
+  }
+}
+
+\renewcommand{\startofchapters}{
+  \clearpage
+  \pagenumbering{arabic}
+  \setcounter{chapter}{0}
+  \onehalfspacing
+  \pagestyle{plain}
+}
+

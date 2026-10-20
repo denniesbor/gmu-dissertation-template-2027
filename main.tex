@@ -1,0 +1,99 @@
+% !TEX program = lualatex
+% George Mason University dissertation or thesis, 2027 UDTS accessible template,
+% manuscript configuration with a reference list at the end of each chapter.
+% Compile with LuaLaTeX (TeX Live 2026). On Overleaf: Menu > Compiler: LuaLaTeX,
+% TeX Live version: 2026, Main document: main.tex.
+%
+% Edit these files for your own document:
+%   frontmatter/metadata.tex      title, your name, degree, committee, signature lines
+%   frontmatter/*.tex             dedication, acknowledgments, lists, abstract, biography
+%   chapters/*.tex                your chapters, each ending with \chapterreferences
+%   references.bib                your bibliography
+% Leave gmuETD.sty unchanged. Options that change its output are in preamble/overrides.tex.
+\input{preamble/accessibility}
+\documentclass[11pt]{report}
+
+% Where the reference lists go:
+%   chapter   manuscript style, one list at the end of each chapter (\chapterreferences)
+%   end       traditional style, one list after the appendices (\thesisreferences)
+% The command for the other style then prints nothing, so both can stay in the files.
+\newcommand{\referencelists}{chapter}
+
+\input{preamble/packages}
+\input{preamble/fonts}
+\usepackage{gmuETD}
+\input{preamble/overrides}
+\input{preamble/headings}
+\input{preamble/citations}
+\input{frontmatter/metadata}
+
+\makeatletter
+\hypersetup{
+  pdftitle={\@onelinetitle},
+  pdfauthor={\@author},
+  pdfdisplaydoctitle=true
+}
+\makeatother
+
+\beforedoc
+
+\begin{document}
+\onehalfspacing
+
+% The front matter pages share chapter number 0, so their link anchors need a prefix.
+\def\theHchapter{front.\arabic{chapter}}
+\hypersetup{pageanchor=false}  % the signature and title pages carry no page number
+\signaturepage
+\titlepage
+\copyrightpage
+\hypersetup{pageanchor=true}
+
+% Dedication and acknowledgments have one extra line between paragraphs (UDTS 2026).
+\setlength{\parskip}{11pt}
+\dedicationpage
+\input{frontmatter/dedication}
+\acknowledgementspage
+\input{frontmatter/acknowledgments}
+\setlength{\parskip}{0pt}
+
+% Optional pages. Delete the pairs you do not need.
+% \disclaimerpage
+% \input{frontmatter/disclaimer}
+\AIusagepage
+\input{frontmatter/ai_statement}
+\prevPubpage
+\input{frontmatter/previously_published}
+
+\tableofcontents
+\listoftables
+\listoffigures
+% Optional lists. Delete the pairs you do not need.
+\listofequations
+\input{frontmatter/list_equations}
+\abbrevpage{List of Abbreviations}
+\input{frontmatter/list_abbreviations}
+\abbrevpage{List of Symbols}
+\input{frontmatter/list_symbols}
+
+\abstractpage
+\input{frontmatter/abstract}
+
+\def\theHchapter{\arabic{chapter}}
+\startofchapters
+
+\include{chapters/ch1_example}
+\include{chapters/ch2_example}
+
+% Appendices. Delete these three lines if you have none.
+\appendix
+\appendixeqnumbering
+\include{chapters/appendix_a}
+
+% One reference list for the whole document, used when \referencelists is end.
+\thesisreferences
+
+\setlength{\parskip}{11pt}
+\biography
+\input{frontmatter/biography}
+
+\end{document}

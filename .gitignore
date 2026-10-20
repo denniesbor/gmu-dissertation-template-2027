@@ -1,0 +1,26 @@
+# Build output. make and build.sh write to .build, build.bat and Overleaf
+# next to the sources.
+/.build/
+*.aux
+*.bbl
+*.blg
+*.log
+*.toc
+*.lof
+*.lot
+*.out
+*.xmpdata
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.synctex(busy)
+*-luamml-mathml.html
+*-mathml-dummy.html
+
+# The compiled document. The sources are the record.
+/main.pdf
+
+# Editor and system files
+.DS_Store
+Thumbs.db
+._*

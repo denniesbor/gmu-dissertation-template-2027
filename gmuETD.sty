@@ -1,0 +1,837 @@
+%%
+%% GMU LaTeX Dissertation Format Style File
+%%
+%% Developed by:
+%%      Daniel O. Awduche and Christopher A. St. Jean
+%%      Communications and Networking Lab
+%%      Dept. of Electrical and Computer Engineering
+%%      (with code adopted from the Stanford University PhD thesis
+%%      style and other sources)
+%%
+%% Modifications by:
+%%      Muhammad Abdulla
+%%      Department of Computer Science
+%%
+%% Notes on usage can be found in the accompanying USAGE_NOTES.txt file
+%%
+%% ** Needless to say, this file should not be changed by individual users
+%% unless (1) you're experimenting with different behavior and (2) you know
+%% what you're doing! **
+%%
+%%**********************************************************************
+%% Legal Notice:
+%% This code is offered as-is without any warranty either
+%% expressed or implied; without even the implied warranty of
+%% MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE!
+%% User assumes all risk.
+%% In no event shall any contributor to this code be liable for any damages
+%% or losses, including, but not limited to, incidental, consequential, or
+%% any other damages, resulting from the use or misuse of any information
+%% contained here.
+%%**********************************************************************
+%%
+%% Revision history:
+%%
+%%      08/11/07: All page numbers are now at the bottom center (C. St. Jean)
+%%      01/14/08: Added disclaimer about signature lines. (Muhammad Abdulla)
+%%      01/14/08: Dedication and acknowledgments pages are set up to be
+%%                single spaced. (Muhammad Abdulla)
+%%      01/14/08: List of Tables and List of Figures are set to appear in
+%%                Table of Contents (Muhammad Abdulla)
+%%      01/14/08: Top margin of appendix is set to 1.25in from 2in (Muhammad Abdulla)
+%%      01/14/08: \ls macro is replaced with \doublespacing from setspace package
+%%                to keep text in figure captions and footnotes single spaced (Muhammad Abdulla)
+%%		03/28/23: Comment out babel package to eliminate an error (Tammy Stitz)
+%%				  - Add command for additional textual lines on the signature page
+%%				  - Eliminate automatic text on signature line and add if statement for \@thirdmember and \@fourthmember
+%%				  - Add advisorsignline in case it needs wordwrapped and for the label that goes on the signature page
+%%				  - Add credential variable to make it configurable by user in .tex file
+%%				  - Changed CV to Biography
+%%				  - Removed single page that said bibliography
+%%				  - Correct float spacing in .tex file, so remove \figSpace
+%%				  - Correct page numbering when more than one abstract page
+%%				  - Widow protection
+%% 		01/13/24: Added List of Abbreviations (Tammy Stitz)
+%%				  Added \fifthmember, \sixthmember
+%% 		02/16/24: Added co-advisor (Tammy Stitz)
+%% 		02/19/24: Made nearly all vertical space on the title page adjustable (Tammy Stitz)
+%% 		05/30/25: Added optional arguments references, nosecnum, secnum, subsecnum
+%%          	  - Check the section depth for numbers to get right spacing when no number
+%%          	  - Remove code that was not used
+%%          	  - Added format for appendices and bibliographies at the end of chapters
+%% 		07/01/25: Changed the name of dean and depthead to lastsignature and nexttolast due to student confusion
+%%				  Added a third degree due to multiple student requests
+%% 		08/06/26: Adjusted template for new formatting
+%%				  - Remove reference option and put code in main template
+%%				  - Adjust indent when there and change tables labels to 1., 2., etc. when nonum is used
+%%				  - Remove the word, by, from the copyright page
+%%				  - Change linespacing to 1.5 for all pages and tables
+%%				  - Add disclaimer, statement of AI use, and previously published sections
+%%				  - Made interior margin 1.25" and textheight 9"
+%%				  - Removed the label Chapter
+%%
+%% $Id: gmudissertation.sty,v 2.1 2026/08/06$
+%%
+% Define options for reference label and section depth (0 or 2)
+\def\biblabelRef{0}
+\def\secdepth{2}
+\DeclareOption{nosecnum}{\renewcommand{\secdepth}{0}}
+\ProcessOptions
+
+% Remove section numbering for nosecnum option - TAS 2025
+\if 0\secdepth
+\renewcommand\thesection{\hskip -2ex}
+\renewcommand\thesubsection{\hskip -2ex}
+\renewcommand\thesubsubsection{\hskip -2ex}
+\renewcommand\theparagraph{}
+\renewcommand\thesubparagraph{}
+\renewcommand{\thefigure}{\arabic{figure}}
+\renewcommand{\thetable}{\arabic{figure}}
+\fi
+
+% Widow control
+\widowpenalty10000
+\clubpenalty10000
+
+% Define equation numbering
+\renewcommand{\theequation}{\arabic{chapter}.\arabic{equation}}
+\newtheorem{lem}{Lemma}[section]
+\newtheorem{prop}{Proposition}[section]
+\newtheorem{assum}{Assumption}[section]
+\newtheorem{Def}{Definition}[section]
+
+%
+%     ===========================
+% === definitions of new commands ===
+%     ===========================
+
+%
+% --- spacing, etc. ---
+%
+
+\newcommand{\nl}{\vskip 0.0pc}
+\newcommand{\noi}{\noindent}
+\newcommand{\emp}[1]{{\bfseries {#1}}}
+\newcommand{\capt}[1]{\caption{\small {\it {#1}}}}
+
+\newcommand{\ls}[1]
+   {\dimen0=\fontdimen6\the\font
+    \lineskip=#1\dimen0
+    \advance\lineskip.5\fontdimen5\the\font
+    \advance\lineskip-\dimen0
+    \lineskiplimit=.9\lineskip
+    \baselineskip=\lineskip
+    \advance\baselineskip\dimen0
+    \normallineskip\lineskip
+    \normallineskiplimit\lineskiplimit
+    \normalbaselineskip\baselineskip
+    \ignorespaces
+   }
+   
+% Correct the spacing for figure captions, table captions and blockquotes - TAS 2026
+\BeforeBeginEnvironment{quote}{\begin{singlespace}\ls{1}}
+\AfterEndEnvironment{quote}{\end{singlespace}}
+\BeforeBeginEnvironment{figure}{\begin{onehalfspace}\ls{1.5}}
+\AfterEndEnvironment{figure}{\end{onehalfspace}}
+\BeforeBeginEnvironment{table}{\begin{onehalfspace}\ls{1.5}}
+\AfterEndEnvironment{table}{\end{onehalfspace}}
+	
+%Command to simplify the equation and symbol/abbreviation entry - TAS 2024
+\newcommand{\eqDesc}[2]{\ref{#1} & \dotfill\phantom{Pag}\pageref{#1}}
+\newcommand{\symbLine}[2]{#1\dotfill\phantom{Pag}#2}
+
+%%%%%
+%%%%%   SETUP MARGINS AND PENALTIES NEEDED FOR GMU DISSERTATION
+%%%%%
+
+
+% Create signature line commands
+\def\siglinelength{2.8 in}
+\def\spacesiglinename{0.5 cm}
+\def\datelinelength{6.1 cm}
+\def\siglinedepth{0.4pt}
+\def\intercommspace{0.20in}
+\def\siglinewithspace{\rule{\siglinelength}{\siglinedepth} \hspace{\spacesiglinename}}
+
+%Additional line for text under a signature line - TAS 2023
+\def\addsigline{\\\phantom{\siglinewithspace}} 
+
+% Create title page commands
+\def\topTitleSkip{0.5892in}
+\def\midTitleSkip{0.5in}
+\def\lblTitleSkip{16pt}
+
+% Set single space
+%\renewcommand{\baselinestretch}{1}
+
+% Set TOC and Abstract label commands
+\renewcommand{\contentsname}{\centering \large TABLE OF CONTENTS}
+\renewcommand{\listfigurename}{\centering \large LIST OF FIGURES}
+\renewcommand{\listtablename}{\centering \large LIST OF TABLES}
+\renewcommand{\abstractname}{\centering \large ABSTRACT}
+
+% We need 1" margins except on the binding edge, where it is 1 1/2"
+% Theses may be either single or double sided
+%Adjusted to 1.25 for inner margin - TAS 2026
+\if@twoside
+    \setlength\oddsidemargin   {0.25in}
+    \setlength\evensidemargin  {0in}
+    \setlength\marginparwidth {40\p@}
+\else
+    \setlength\oddsidemargin   {0.25in}
+    \setlength\evensidemargin  {0.25in}
+    \setlength\marginparwidth  {40\p@}
+\fi
+
+\marginparsep 10pt
+
+% 11/06/03 additions
+\voffset -0.5in
+
+%%%%%%%
+
+% 11/07/03 additions
+% Changed textheight to 9in, otherwise it is off the page with onehalfspace - TAS 2026
+\topmargin 0pt
+\headsep .5625in
+\textheight 9in
+\textwidth 6.25in
+\footskip 21pt
+
+
+% Disallow page breaks at hyphens (this will give some underfull vbox's,
+% so an alternative is to use \brokenpenalty=100 and manually search
+% for and fix such page breaks)
+\brokenpenalty=10000
+
+%%%%%
+%%%%%   SETUP COMMANDS PECULIAR TO THESES
+%%%%%
+
+% Create commands for the front matter (e.g, signature page, title page)
+\def\onelinetitle#1{\gdef\@onelinetitle{#1}}
+\def\credential#1{\gdef\@credential{#1}}
+\def\degree#1{\gdef\@degree{#1}}
+\def\doctype#1{\gdef\@doctype{#1}}
+\def\chapterOneTitle#1{\gdef\@chapterOneTitle{#1}}
+
+% Needed after the degree title in the title page (Muhammad Abdulla)
+\def\discipline#1{\gdef\@discipline{#1}} 
+
+% Create advisor and coadviser commands
+\def\deptadvisor#1{\gdef\@deptadvisor{#1}}
+\def\deptcoadvisor#1{\gdef\@deptcoadvisor{#1}}
+\def\advis@r{Adviser} % default spelling
+\def\advisorname#1{\gdef\@advisorname{#1}}
+\def\coadvisorname#1{\gdef\@coadvisorname{#1}}
+\def\advisorsignline#1{\gdef\@advisorsignline{#1}}
+\def\coadvisorsignline#1{\gdef\@coadvisorsignline{#1}}
+
+% Create commands for committee members and others that sign the thesis or dissertation
+\def\firstmember#1{\gdef\@firstmember{#1}}
+\def\secondmember#1{\gdef\@secondmember{#1}}
+\def\thirdmember#1{\gdef\@thirdmember{#1}}
+\def\fourthmember#1{\gdef\@fourthmember{#1}}
+\def\fifthmember#1{\gdef\@fifthmember{#1}}
+\def\sixthmember#1{\gdef\@sixthmember{#1}}
+\def\nexttolast#1{\gdef\@nexttolast{#1}}
+\def\lastsignature#1{\gdef\@lastsignature{#1}}
+
+% Create submit date command
+\def\submitdate#1{\gdef\@submitdate{#1}}
+
+% Create previous degree commands (up to 3 previous degrees)
+\def\firstdeg#1{\gdef\@firstdeg{#1}}
+\def\firstdegschool#1{\gdef\@firstdegschool{#1}}
+\def\firstdegyear#1{\gdef\@firstdegyear{#1}}
+\def\seconddeg#1{\gdef\@seconddeg{#1}}
+\def\seconddegschool#1{\gdef\@seconddegschool{#1}}
+\def\seconddegyear#1{\gdef\@seconddegyear{#1}}
+\def\thirddeg#1{\gdef\@thirddeg{#1}}
+\def\thirddegschool#1{\gdef\@thirddegschool{#1}}
+\def\thirddegyear#1{\gdef\@thirddegyear{#1}}
+
+% Create commands for the degree that is being sought
+\def\degreesemester#1{\gdef\@degreesemester{#1}}
+\def\degreeyear#1{\gdef\@degreeyear{#1}}
+
+% Define the abstract command
+\def\abstract#1{\gdef\@abstract{#1}}
+
+% Define various front matter commands. Those that have a * are not required in the GMU-Diss_template.tex or GMU-MS_template.tex file
+\def\@title{}\def\@author{}\def\@deptadvisor{}\def\@deptcoadvisor{*}\def\@discipline{}\def\@credential{*}
+\def\@advisorname{}\def\@coadvisorname{*}
+\def\@advisorsignline{}\def\@coadvisorsignline{*}
+\def\@firstmember{*}\def\@secondmember{*}\def\@thirdmember{*}\def\@fourthmember{*}\def\@fifthmember{*}\def\@sixthmember{*}
+\def\@seconddeg{*}\def\@seconddegschool{*}\def\@seconddegyear{*}
+\def\@thirddeg{*}\def\@thirddegschool{*}\def\@thirddegyear{*}
+\def\@nexttolast{*}
+\def\@lastsignature{*}
+
+\def\beforedoc{
+    %
+    % --- spacing and page numbering
+    %
+
+    \markright{}
+    \pagestyle{myheadings}
+   	}
+
+% Create the signature page
+\def\signaturepage{
+        \pagenumbering{roman}
+        \pagestyle{plain}
+        \thispagestyle{empty}%
+        \null \vskip\topTitleSkip %.5825in,.01in
+        \begin{center}
+                \rm\uppercase\expandafter{\@title}\\
+                \normalsize
+                \bigskip by \\
+                \bigskip \@author \\
+                A \@doctype\ \\
+                Submitted to the\\
+                Graduate Faculty\\
+                of\\
+                George Mason University\\
+                In Partial fulfillment of\\
+                The Requirements for the Degree\\
+                of\\
+                \@degree\\
+                \@discipline\\[\midTitleSkip] %[0.5 in]
+        \end{center}
+        Committee:\\[\lblTitleSkip] %[16 pt]
+        % Remove all the automatic text and allow the author to enter TAS - 2023
+        \siglinewithspace \@advisorsignline\\[\intercommspace]
+        \if*\@coadvisorname
+        \else
+            \siglinewithspace \@coadvisorsignline\\[\intercommspace]
+        \fi
+        \siglinewithspace \@firstmember\\[\intercommspace]
+        \siglinewithspace \@secondmember\\[\intercommspace]
+        \if*\@thirdmember
+        \else
+            \siglinewithspace \@thirdmember\\[\intercommspace]
+        \fi
+	    \if*\@fourthmember
+        \else
+            \siglinewithspace \@fourthmember\\[\intercommspace]
+        \fi
+	    \if*\@fifthmember
+        \else
+            \siglinewithspace \@fifthmember\\[\intercommspace]
+        \fi
+	    \if*\@sixthmember
+        \else
+			\siglinewithspace \@sixthmember\\[\intercommspace]
+		\fi
+	  \if*\@nexttolast
+      \else
+        \siglinewithspace \@nexttolast\\[\intercommspace]
+	  \fi
+	  \if*\@lastsignature
+      \else
+        \siglinewithspace \@lastsignature\\[\intercommspace]
+      \fi
+        Date: \rule{\datelinelength}{\siglinedepth} \hspace{\spacesiglinename} \!\!\@degreesemester\
+        \@degreeyear\\
+        \phantom{Date: \rule{\datelinelength}{\siglinedepth} \hspace{\spacesiglinename}}George Mason University \\
+        \phantom{Date: \rule{\datelinelength}{\siglinedepth} \hspace{\spacesiglinename}}Fairfax, VA
+       \newpage
+}
+
+% Create the title page
+\def\titlepage{
+        \thispagestyle{empty}%
+        \null\vskip .5825in
+        \begin{center}
+                \rm\expandafter{\@onelinetitle}\\[10 pt] %Needed title to be in caps
+        \end{center}
+        A \lowercase\expandafter{\@doctype} submitted in partial fulfillment of the requirements for
+            the degree of \\ \@degree\ at George Mason University \\[10 pt]
+        \begin{center}
+        By \\[35 pt]
+        \@author \\
+        \if*\@thirddeg 
+        \else
+             \@thirddeg\\
+             \@thirddegschool, \@thirddegyear
+             \\
+        \fi
+        \if*\@seconddeg 
+        \else
+             \@seconddeg\\
+             \@seconddegschool, \@seconddegyear
+             \\
+        \fi
+        \@firstdeg\\
+        \@firstdegschool, \@firstdegyear
+        \\[39 pt]
+        \if*\@coadvisorname
+           Director: \@advisorname, Professor \\
+           Department of \@deptadvisor \\[35 pt]
+        \else
+           Directors: \@advisorname, Professor\\
+           Department of \@deptadvisor \\
+           \@coadvisorname, Professor\\
+           Department of \@deptcoadvisor\\[35 pt]
+        \fi
+        \@degreesemester\
+        %Semester
+        \@degreeyear \\
+        George Mason University \\
+        Fairfax, VA
+        \end{center}
+        \vfill
+        \newpage
+}
+
+% Create the copyright page
+\def\copyrightpage{
+        \null\vspace*{2.375 in}
+        \pagenumbering{roman}
+        \setcounter{page}{2}
+        %Took out the word by because not in the Word template - TAS 2026
+        \begin{center}
+                Copyright\ \copyright\ \@degreeyear\ \@author\\
+                All Rights Reserved
+        \end{center}
+        \vfill
+}
+
+\def\beforepreface{
+        \pagenumbering{roman}
+        \pagestyle{plain}
+        \signaturepage
+        \titlepage
+}
+
+% Create the dedication page
+\def\dedicationpage{
+        \lineskiplimit=1.5pc
+        % Change spacing to 1.5 - TAS 2026
+        \ls{1.5}
+
+        \renewcommand{\thepage}{\roman{page}}
+        \setcounter{page}{3}
+        \chapt*{Dedication}
+}
+
+% Create the acknowledgement page
+\def\acknowledgementspage{
+        %Change spacing to 1.5 - TAS 2026
+        \ls{1.5}
+   		\chapt*{Acknowledgments}
+}
+
+% Create the disclaimer page - TAS 2026
+\def\disclaimerpage{
+   	\ls{1.5}
+	\vspace*{0.30 in}
+	\chapt*{Disclaimer}
+}
+
+% Create the AI usage page - TAS 2026
+\def\AIusagepage{
+    \ls{1.5}
+	\chapt*{Statement of AI Usage}
+}
+
+% Create the Previously Published Materials page - TAS 2026
+\def\prevPubpage{
+    \ls{1.5}
+	\chapt*{Previously Published Materials}
+}
+
+\def\startofchapters{
+% Set the first chapter flag
+\def\flgFirstChapter{1}
+}
+
+%
+% --- chapters ---
+%
+
+% Use \secdepth to get correct spacing - TAS 2025
+\def\@chapter[#1]#2{%
+	% Reset page and chapter counter for first chapter - TAS 2023
+	\if1\flgFirstChapter
+	    \renewcommand{\thepage}{\arabic{page}}
+	    \setcounter{chapter}{0}
+	    \setcounter{page}{1}
+        \pagestyle{plain}
+	    \renewcommand{\flgFirstChapter}{0}
+	\fi
+	\refstepcounter{chapter}
+	\typeout{\@chapapp\space\thechapter.}	
+	\if 0\secdepth
+        \addcontentsline{toc}{chapter}{\hspace*{-1.25em}#1}
+    \else
+        \addcontentsline{toc}{chapter}{\protect\numberline{\thechapter} #1}
+    \fi
+    \chaptermark{#1}
+    \if@twocolumn
+       \@topnewpage[\@makechapterhead{#2}]
+    \else 
+       \@makechapterhead{#2}
+       \@afterheading
+    \fi
+}
+
+\def\l@chapter{\vskip 0.0em plus 1pt
+    \@dottedtocline{0}{0.0em}{1.35em}
+}
+
+% Use \secdepth to determine correct spacing - TAS 2025
+\def\@makechapterhead#1{
+    \parindent 0pt \raggedright
+    \vspace*{0.27 in}
+    \begin{center}
+       \Large \bf 
+	   \if 0\secdepth
+	      #1 \par
+	   \else
+	      \thechapter. #1 \par
+	   \fi
+    \end{center}
+    \nobreak
+    \vskip 22 pt
+}
+
+%
+% --- appendix chapters ---
+%
+
+% Use \secdepth to get right spacing - TAS 2025
+\def\appchapter[#1]#2{
+    \refstepcounter{chapter}
+    \typeout{\@chapapp\space\thechapter.}
+    \if 0\secdepth
+       \addcontentsline{toc}{chapter}{\hspace*{-1.25em}#1}
+    \else
+       \addcontentsline{toc}{chapter}{\protect\numberline{\thechapter} #1}
+    \fi
+    \chaptermark{#1}
+    \if@twocolumn
+       \@topnewpage[\@makeappchapterhead{#2}]
+    \else 
+       \@makeappchapterhead{#2}
+       \@afterheading
+    \fi
+}
+
+\def\appsection#1{
+	\refstepcounter{section}
+	\typeout{\@chapapp\space\thesection.}
+	\chaptermark{#1}
+	\if@twocolumn
+	   \@topnewpage[\@makeappsectionhead{#1}]
+	\else 
+	   \@makeappsectionhead{#1}
+	   \@afterheading
+	\fi
+}
+
+% Use \secdepth to get correct spacing - TAS 2025
+\def\@makeappchapterhead#1{
+    \parindent 0pt \raggedright
+    \vspace*{-0.48 in} % changing top margin of appendix from 2" to 1.25" (Muhammad Abdulla)
+		{	\Large \bf
+   			\if 0\secdepth
+				\centerline{#1}
+			\else
+				\centerline{Appendix \thechapter: #1}
+			\fi}
+    \nobreak
+    \vskip 22 pt
+}
+
+% Chapter Appendices still need centered - TAS 2025
+\def\@makeappsectionhead#1{
+	\parindent 0pt
+\begin{center}
+	\Large \bf
+	#1 \par
+\end{center}
+\nobreak
+\vskip 22 pt
+}
+
+%
+% --- secondary chapters
+%
+
+\NewDocumentCommand{\chapt}{s o m}{%
+	\clearpage
+	\thispagestyle{plain}
+	\global\@topnum\z@
+	\@afterindentfalse
+
+	\IfBooleanTF{#1}{\@schapt{#3}}{\IfNoValueTF{#2}{\@chapt[#3]{#3}}{\@chapt[#2]{#3}}}
+}
+
+%Sections before the TOC in the TOC
+% Use \secdepth to get correct spacing - TAS 2025
+\def\@chapt[#1]#2{
+    \refstepcounter{chapter}
+    \typeout{\@chapapp\space\thechapter.}
+	\if 0\secdepth
+       \addcontentsline{toc}{chapter}{\hspace*{-1.5em}#1}
+    \else
+       \addcontentsline{toc}{chapter}{\protect\numberline{}\hspace*{-1.5em}#1}
+    \fi
+    \chaptermark{#1}
+    \if@twocolumn                                 % Tests for two-column mode.
+       \@topnewpage[\@makechapthead{#2}]
+    \else 
+       \@makechapthead{#2}
+       \@afterheading
+    \fi
+}                            
+
+% Calls make heading for TOC
+\def\@schapt#1{
+	\if@twocolumn 
+	   \@topnewpage[\@makeschapthead{#1}]
+    \else 
+       \@makeschapthead{#1}
+       \@afterheading
+    \fi
+}
+
+% Label on chapter
+\def\@makechapthead#1{
+    \parindent 0pt \raggedright
+    \vspace*{0.325in}
+    \centerline{\Large \bf #1} \par
+    \nobreak
+    \vskip 33pt
+}
+
+% TOC heading
+\def\@makeschapthead#1{
+    \parindent 0pt \raggedright
+    \vspace*{0.325in}
+\tagstructbegin{tag=H1}
+\tagmcbegin{tag=H1}
+    \centerline{\Large \bf #1} \par
+    \tagmcend
+\tagstructend
+    \nobreak
+    \vskip 33pt
+}
+
+%
+% --- table of contents ---
+%
+
+\def\tableofcontents{
+    \baselineskip=0.25pc
+    \lineskip=0.25pc
+    \lineskiplimit=0.25pc
+    \@restonecolfalse
+    \if@twocolumn
+       \@restonecoltrue\onecolumn
+    \fi
+    \pagebreak
+    \pdfbookmark{Table of Contents}{TOC}
+	\chapt*{Table of Contents}\@mkboth{TABLE OF CONTENTS}{TABLE OF CONTENTS}
+    \vskip -0.83 pc
+    \hfill Page \par
+    \lineskip=0.7pc     %%% USE FOR WIDER SPACING TOC
+    \@starttoc{toc}
+    \if@restonecol
+       \twocolumn
+    \fi
+    \lineskip=0.25pc   %%% USE FOR WIDER SPACING TOC
+}
+
+
+% --List of Tables
+% captiontable - a tabular environment nested within a table environment with
+%                a label, an optional List of Tables entry and a caption
+
+\def\captiontable#1{
+    \@ifnextchar {\@captiontable{#1}}{\@dblarg{\@captiontable{#1}}}
+}
+
+\def\@captiontable#1[#2]#3{
+    \def\@captionlabel{#1}
+    \def\@captionlistentry{#2}
+    \def\@captionheading{#3}
+    \begin{table}
+    \centering 
+}
+
+\def\endcaptiontable{
+    \caption [\@captionlistentry]{\@captionheading}
+    \label {\@captionlabel}
+    \vspace*{7.6in}
+    \end{table}
+}
+
+\def\listoftables{
+	\@restonecolfalse
+	\if@twocolumn
+	   \@restonecoltrue\onecolumn
+    \fi
+    \pagebreak
+	\chapt*{List of Tables}\@mkboth{LIST OF TABLES}{LIST OF TABLES}
+    \phantomsection
+    \addcontentsline{toc}{chapter}{List of Tables}
+    \vskip -0.83 pc
+    \hspace{0.5em}Table \hfill Page \par
+    \lineskip=0.7pc  %%% USE FOR WIDER SPACING LOT
+    \@starttoc{lot}
+    \if @restonecol
+       \twocolumn
+    \fi
+    \lineskip=0.25pc  %%% USE FOR WIDER SPACING LOT
+}
+
+%
+% --- list of figures ---
+%
+
+\def\listoffigures{
+	\@restonecolfalse
+	\if@twocolumn
+	   \@restonecoltrue\onecolumn
+    \fi
+    \pagebreak
+	\chapt*{List of Figures}\@mkboth{LIST OF FIGURES}{LIST OF FIGURES}
+    \phantomsection
+    \addcontentsline{toc}{chapter}{List of Figures}
+    \vskip -0.83 pc
+    \vspace*{-0.05in}
+    Figure \hfill Page \par
+    \lineskip=0.7pc  %%% USE FOR WIDER SPACING LOF
+    \@starttoc{lof}
+    \if@restonecol
+       \twocolumn
+    \fi
+    \lineskip=0.25pc  %%% USE FOR WIDER SPACING LOF
+}
+
+%
+% --- list of equations ---
+%
+
+\def\listofequations{
+	\pagebreak
+	\baselineskip=0.25pc
+	\lineskip=0.25pc
+	\lineskiplimit=0.25pc
+	\chapt*{List of Equations}
+    \phantomsection
+    \addcontentsline{toc}{chapter}{List of Equations}
+	\vskip -0.83 pc
+	\vspace*{-0.05in}
+}
+
+%
+% List of Abbreviations
+%
+\def\abbrevpage#1{
+	\baselineskip=0.25pc
+	\lineskip=0.25pc
+	\lineskiplimit=0.25pc
+	\chapt*{#1}
+    \phantomsection
+    \addcontentsline{toc}{chapter}{#1}
+	\vskip -0.83 pc
+	\vspace*{-0.05in}
+}
+
+%
+% --- abstract
+%
+
+\def\abstractpage{
+	\pagebreak
+	\baselineskip=0.25pc
+	\lineskip=0.25pc
+	\lineskiplimit=0.25pc
+	\pagestyle{empty}
+    \chapt*{Abstract}
+    \phantomsection
+    \addcontentsline{toc}{chapter}{Abstract}
+	\baselineskip=1pc
+	\lineskip=1pc
+	\lineskiplimit=1pc
+	\vskip 0.25cm
+	\noi
+	\ls{1}
+	\rm\uppercase\expandafter{\@onelinetitle}
+	\nl
+	\baselineskip=1pc
+	\lineskip=1pc
+	\lineskiplimit=1pc
+	\noi
+	\if*\@credential
+	   \@author
+	\else
+	   \@author, \@credential
+	\fi
+	\nl
+	\noi
+	George Mason University, \@degreeyear
+	\nl
+	\noi
+	\if*\@coadvisorname
+	   \@doctype\ Director: \@advisorname
+	\else
+	   \@doctype\ Directors: \@advisorname\\
+	   \phantom{\@doctype\ Directors: }\@coadvisorname
+	\fi
+	\nl
+	\vskip 46pt
+}
+
+\def\appendixeqnumbering {
+    \renewcommand{\theequation}{\thechapter.\arabic{equation}}
+}
+
+%
+% --- bibliography
+%
+
+% Took out seperate page that just said bibliography - TAS 2023
+\def\thebibliography#1{
+	\ls{1}
+	{\centering \chapter*{\bibname}}
+	\list{[\arabic{enumi}]}{\settowidth\labelwidth{[#1]}\leftmargin\labelwidth\advance\leftmargin\labelsep\usecounter{enumi}}
+	\def\newblock{\hskip .11em plus .33em minus .07em}
+	\sloppy\clubpenalty4000\widowpenalty4000
+	\sfcode`\.=1000\relax
+}
+
+%
+% --- biography
+%
+
+% biography instead of CV - TAS 2023
+\def\biography{
+    \pagebreak
+	\chapt*{Biography}
+    \ls{1}
+    \noindent
+}
+
+% we can send console reminder messages to the user here
+% Added by Muhammad Abdulla
+\AtEndDocument{
+\typeout{}%
+\typeout{======================== Attention ===============================}%
+\typeout{}%
+\typeout{The signature lines are different for each College/School of}%
+\typeout{George Mason University.}%
+\typeout{}%
+\typeout{The current signature page is set according to the requirements} %
+\typeout{of the Volgenau School of Information Technology and Engineering.}%
+\typeout{Students of other colleges/schools may need to manipulate the}%
+\typeout{"signaturepage" section of the gmudissertation.sty file in order}%
+\typeout{for the signature page to be formatted correctly.}%
+\typeout{}%
+\typeout{==================================================================}%
+\typeout{}%
+}

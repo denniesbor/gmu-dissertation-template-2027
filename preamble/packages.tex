@@ -1,0 +1,42 @@
+% Packages. Add your own at the end of this file.
+\usepackage{etoolbox}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage[normalem]{ulem}
+\usepackage{setspace}
+\usepackage{url}
+% hyperref must come before apacite, which enables its hyperref support only
+% when hyperref is already loaded.
+\usepackage[hidelinks,bookmarksnumbered]{hyperref}
+% APA references. notocbib: the table of contents entry is added by
+% \chapterreferences or \thesisreferences in overrides.tex.
+\ifdefstring{\referencelists}{chapter}{
+  \usepackage[sectionbib,notocbib]{apacite}
+  \usepackage{chapterbib}
+}{
+  \usepackage[notocbib]{apacite}
+}
+% gmuETD, loaded later, replaces this list with a numbered one. overrides.tex restores it.
+\let\APACthebibliography\thebibliography
+\let\APACendthebibliography\endthebibliography
+% Short author form (first author et al.) from the first mention on.
+\let\cite\shortcite
+\let\citeA\shortciteA
+\usepackage{adjustbox}
+\usepackage{fancyhdr}
+\usepackage{enumitem}
+\usepackage{xparse}
+\usepackage{placeins}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{array}
+\usepackage{pdfpages}
+% Unicode mathematics supplies the MathML used by the accessible template (LuaLaTeX only).
+\ifpdftex\else\usepackage{unicode-math}\fi
+
+% Let long URLs break at punctuation.
+\Urlmuskip=0mu plus 2mu\relax
+\def\UrlBreaks{\do\/\do\.\do\-\do\_\do\?}

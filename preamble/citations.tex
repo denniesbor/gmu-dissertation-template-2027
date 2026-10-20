@@ -1,0 +1,8 @@
+\makeatletter
+\patchcmd{\@lbibitem}{\hyper@natanchorstart{#2\APAC@extra@b@citeb}}{}{}{
+  \PackageError{thesis}{Unable to adapt apacite bibliography targets}{Check apacite and the tagging bibliography hooks.}
+}
+\patchcmd{\@lbibitem}{\hyper@natanchorend}{}{}{
+  \PackageError{thesis}{Unable to adapt apacite bibliography target ends}{Check apacite and the tagging bibliography hooks.}
+}
+\makeatother
